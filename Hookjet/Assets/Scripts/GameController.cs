@@ -11,19 +11,22 @@ public class GameController : MonoBehaviour
     public float playerSpeed = 12f;
     public float playerBaseSpeed = 12f;
 
-    public float playerFullness = 0f;
+    // Hookshot management
+    public RaycastHit hookshotLocation; // How far the current hook is from the player
+    public float distanceFromHit = 0f;
+    public float hookAcceleration = 10f;
+    public bool onHook = false;
 
     // Start is called before the first frame update
     void Start()
     {
+        distanceFromHit = 0f;
         Cursor.lockState = CursorLockMode.Locked;
     }
 
     // Update is called once per frame
     void Update()
     {
-
-
         // Increment timer
         gameStartTime += Time.deltaTime;
     }
