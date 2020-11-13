@@ -125,6 +125,7 @@ Transform:
   m_Children:
   - {fileID: 7936084362709692484}
   - {fileID: 7936084363062194095}
+  - {fileID: 5706478979431174366}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
@@ -158,10 +159,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 747ed92dcab8d504c951ce5df53a7f04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerController: {fileID: 7936084362842906829}
   gameController: {fileID: 0}
   gravity: -9.81
+  hookGravity: -6.81
   jumpHeight: 3
+  acceleration: 0
+  groundCheck: {fileID: 0}
+  groundDistance: 1
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &7936084363062194090
 GameObject:
   m_ObjectHideFlags: 0
@@ -260,3 +267,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mouseSensitivity: 500
   playerBody: {fileID: 7936084362842906828}
+--- !u!1 &7989182457915989634
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5706478979431174366}
+  m_Layer: 8
+  m_Name: GroundCheck
+  m_TagString: Player
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5706478979431174366
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7989182457915989634}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -1.8, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 7936084362842906828}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

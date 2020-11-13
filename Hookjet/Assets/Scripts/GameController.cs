@@ -6,10 +6,12 @@ public class GameController : MonoBehaviour
 {
     // Timer management
     float gameStartTime = 0f;
+    public float dashResetTime = 15f;
 
     // Player management
     public float playerSpeed = 12f;
     public float playerBaseSpeed = 12f;
+    public float dashDistance = 5f;
 
     // Hookshot management
     public RaycastHit hookshotLocation; // How far the current hook is from the player
@@ -22,6 +24,7 @@ public class GameController : MonoBehaviour
     {
         distanceFromHit = 0f;
         Cursor.lockState = CursorLockMode.Locked;
+        QualitySettings.vSyncCount = 1;
     }
 
     // Update is called once per frame

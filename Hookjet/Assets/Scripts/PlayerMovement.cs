@@ -1,90 +1,115 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
     Vector3 velocity;
-    public CharacterController playerController;
+    //public CharacterController playerController;
+    Rigidbody playerController;
     public GameController gameController;
+    Vector3 inputs;
 
     public float gravity = -9.81f;
     public float hookGravity = -6.81f;
     public float jumpHeight = 3f;
     public float acceleration = 0f;
+    float playerMass;
+
+    // Variables for the ground
+    public Transform groundCheck;
+    public float groundDistance = 0.4f; // The size the sphere should check for
+    public LayerMask groundLayer;
+
+    // Pendulum management
+    float angularVelocity = 0f;
+    float angularAcceleration = 0f;
+
+    // Time Management
+    float dashTimer = 0f;
 
     bool grounded;
-    bool wasOnHook = false;
+    bool dashCooldown;
+    bool wasOnHook;
 
-    // Update is called once per frame
+    void Start()
+    {
+        dashCooldown = false;
+        wasOnHook = false;
+        playerController = GetComponent<Rigidbody>();
+        playerMass = playerController.mass;
+    }
+
     void Update()
     {
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
+        //grounded = Physics.CheckSphere(groundCheck.position, GroundDistance, groundCheck, QueryTriggerInteraction.Ignore); 
+        inputs = Vector3.zero;
+        inputs.x = Input.GetAxis("Horizontal");
+        inputs.z = Input.GetAxis("Vertical");
         float deadZone = 0.25f; // Controller deadzone.
 
-        Vector3 move = transform.right * x + transform.forward * z;
-
-
         // This will fix deadzone and normalization on controllers as well as keyboard.
-        if (move.magnitude < deadZone)
-            move = Vector3.zero;
+        if (inputs.magnitude < deadZone)
+            inputs = Vector3.zero;
         else
-            move = move.normalized * ((move.magnitude - deadZone) / (1 - deadZone));
+            inputs = inputs.normalized * ((inputs.magnitude - deadZone) / (1 - deadZone));
 
-        // Check if the player is on the ground
-        if (playerController.isGrounded && velocity.y < 0)
-            grounded = true;
-        else
-            grounded = false;
+        grounded = Physics.CheckSphere(groundCheck.transform.position, groundDistance, groundLayer);
 
-        // Detects if the player is pressing the jump key
+        // Player jump
         if (Input.GetButtonDown("Jump") && grounded)
         {
-            velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
+            playerController.AddForce(Vector3.up * Mathf.Sqrt(jumpHeight * -2f * Physics.gravity.y), ForceMode.VelocityChange);
             grounded = false;
         }
 
-        //Gravity
-        if (grounded && velocity.y < 0 && !gameController.onHook)
+        // Player dashing
+        if (Input.GetButtonDown("Dash") && !dashCooldown)
         {
-            velocity.y = -2f;
+            Vector3 dashVelocity = (gameController.dashDistance * transform.forward);
+            playerController.AddForce(dashVelocity, ForceMode.VelocityChange);
+            dashCooldown = true;
+            dashTimer = gameController.dashResetTime;
         }
 
-        // Effect gravity depending on whether or not the player is on a hook
-        if (!gameController.onHook)
-        {
-            velocity.y += gravity * Time.deltaTime;
-            acceleration = 1f; // reset acceleration if the player is not on a hook
-        }
-        else
-        {
-            acceleration = gameController.hookAcceleration;
-            velocity.y += hookGravity * Time.deltaTime;
-        }
+        velocity.y += gravity * Time.deltaTime;
+        playerController.AddForce(velocity * Time.deltaTime);
 
-        playerController.Move((move * (gameController.playerSpeed + acceleration) * Time.deltaTime) + (velocity * Time.deltaTime));
+        if (dashTimer > 0)
+            dashTimer -= Time.deltaTime;
 
-        // If player is on a hook, and at the furthest distance from the hook, stop moving out of that distance
-        if (gameController.onHook)
-        {
-            float currentDistance = Vector3.Distance(transform.position, gameController.hookshotLocation.point);
-            if (currentDistance > gameController.distanceFromHit) // If player is getting outside the boundry
-            {
-                // Reset location just to the edge of the boundry
-                Vector3 distanceFromPoint = transform.position - gameController.hookshotLocation.point;
-                distanceFromPoint *= gameController.distanceFromHit / currentDistance;
-                transform.position = gameController.hookshotLocation.point + distanceFromPoint;
-            }
+        if (dashTimer <= 0)
+            dashCooldown = false;
+        //playerController.MovePosition(velocity * Time.deltaTime);
 
-            wasOnHook = true;
-        }
-        else if (wasOnHook)
-        {
-            Vector3 negVelocity = -velocity;
-            wasOnHook = false;
-            playerController.Move(negVelocity * Time.deltaTime);
-            velocity.y = 0;
-        }
+    }
+
+    void FixedUpdate()
+    {
+        //playerController.MovePosition(playerController.position + inputs * gameController.playerSpeed * Time.fixedDeltaTime);
+        float movementSpeed = gameController.playerSpeed * Time.deltaTime;
+        playerController.MovePosition(transform.position + (transform.forward * inputs.z * movementSpeed) + (transform.right * inputs.x * movementSpeed));
+    }
+
+    void PendulumPlayer(Vector3 move)
+    {
+        Vector3 bob = transform.position; // Player is the bob
+        Vector3 origin = gameController.hookshotLocation.point; // The spot where the player hit
+        float length = gameController.distanceFromHit;
+        
+        // Which way are we facing
+        Vector3 currentDirection = (transform.position - gameController.hookshotLocation.point).normalized;
+        float angle = Vector3.Angle(Vector3.down, currentDirection) * Mathf.Deg2Rad;
+
+        bob.x = origin.x + length * Mathf.Sin(angle);
+        bob.z = origin.z + length * Mathf.Cos(angle);
+
+        angularAcceleration = (gravity * playerMass) * Mathf.Sin(angle);
+
+
+        angle += angularVelocity * 0.995f;
+        angularVelocity += angularAcceleration;
+
     }
 }
