@@ -30,7 +30,8 @@ public class PlayerShoot : MonoBehaviour
             gameController.distanceFromHit = 0f;
             gameController.onHook = false;
 
-            Destroy(newRope);
+            if (newRope)
+                Destroy(newRope);
         }
 
         if (newRope)

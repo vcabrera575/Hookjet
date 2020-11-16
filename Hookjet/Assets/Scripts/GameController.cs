@@ -24,7 +24,6 @@ public class GameController : MonoBehaviour
     {
         distanceFromHit = 0f;
         Cursor.lockState = CursorLockMode.Locked;
-        QualitySettings.vSyncCount = 1;
     }
 
     // Update is called once per frame

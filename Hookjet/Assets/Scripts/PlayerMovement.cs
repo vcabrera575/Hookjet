@@ -83,13 +83,50 @@ public class PlayerMovement : MonoBehaviour
             dashCooldown = false;
         //playerController.MovePosition(velocity * Time.deltaTime);
 
+
+        // If player is on a hook, and at the furthest distance from the hook, stop moving out of that distance
+        if (gameController.onHook)
+        {
+            acceleration = gameController.hookAcceleration;
+            // If player is on a hook, and at the furthest distance from the hook, stop moving out of that distance
+            if (gameController.onHook)
+            {
+                float currentDistance = Vector3.Distance(transform.position, gameController.hookshotLocation.point);
+                if (currentDistance > gameController.distanceFromHit) // If player is getting outside the boundry
+                {
+                    // Reset location just to the edge of the boundry
+                    Vector3 distanceFromPoint = transform.position - gameController.hookshotLocation.point;
+                    distanceFromPoint *= gameController.distanceFromHit / currentDistance;
+                    transform.position = gameController.hookshotLocation.point + distanceFromPoint;
+                }
+            }
+
+            wasOnHook = true;
+        }
+        else if (wasOnHook)
+        {
+            //Vector3 negVelocity = -velocity;
+            wasOnHook = false;
+            //playerController.Move(negVelocity * Time.deltaTime);
+            Vector3 tmpVelocity = playerController.velocity;
+            playerController.velocity = new Vector3(tmpVelocity.x, 0, tmpVelocity.z);
+        }
+        acceleration = 1f;
     }
 
     void FixedUpdate()
     {
         //playerController.MovePosition(playerController.position + inputs * gameController.playerSpeed * Time.fixedDeltaTime);
-        float movementSpeed = gameController.playerSpeed * Time.deltaTime;
+        float movementSpeed = gameController.playerSpeed * acceleration * Time.deltaTime;
+
+        float distance = inputs.magnitude * Time.fixedDeltaTime;
+        RaycastHit hit;
+        if (playerController.SweepTest(inputs * acceleration * movementSpeed, out hit, distance))
+            playerController.velocity = new Vector3(0, playerController.velocity.y, 0);
+        
+        
         playerController.MovePosition(transform.position + (transform.forward * inputs.z * movementSpeed) + (transform.right * inputs.x * movementSpeed));
+
     }
 
     void PendulumPlayer(Vector3 move)
@@ -110,6 +147,5 @@ public class PlayerMovement : MonoBehaviour
 
         angle += angularVelocity * 0.995f;
         angularVelocity += angularAcceleration;
-
     }
 }

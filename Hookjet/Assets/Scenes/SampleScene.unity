@@ -871,12 +871,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 7936084363445502683}
   m_PrefabAsset: {fileID: 0}
---- !u!20 &963194229 stripped
-Camera:
-  m_CorrespondingSourceObject: {fileID: 7936084363062194088, guid: cc5e9e533a61e5f488257d0a24f0617f,
-    type: 3}
-  m_PrefabInstance: {fileID: 7936084363445502683}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &963194230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -998,24 +992,6 @@ CharacterController:
     type: 3}
   m_PrefabInstance: {fileID: 7936084363445502683}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1270979371
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1270979367}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 34c6bd12356e28245a1d1cf7e2d077a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  camera_camera: {fileID: 963194229}
-  grappling_hook_mode: 1
-  draw_dev_line: 1
-  disconent_on_los_break: 0
-  break_tether_velo: 1e+11
-  GRAPPLING_NODE_TAG: Environment
 --- !u!54 &1270979372
 Rigidbody:
   m_ObjectHideFlags: 0
