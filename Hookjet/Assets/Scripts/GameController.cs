@@ -12,6 +12,7 @@ public class GameController : MonoBehaviour
     public float playerSpeed = 12f;
     public float playerBaseSpeed = 12f;
     public float dashDistance = 5f;
+    public float jumpHeight = 5f;
 
     // Hookshot management
     public RaycastHit hookshotLocation; // How far the current hook is from the player
