@@ -41,7 +41,7 @@ public class PlayerShoot : MonoBehaviour
             // Rope turns to the player
             newRope.transform.LookAt(transform.position);
 
-            // Make the rope appear to go point that was hit
+            // Make the rope stretch towards the player
             distanceToHit = Vector3.Distance(transform.position, gameController.hookshotLocation);
             newRope.transform.localScale = new Vector3(1, 1, distanceToHit / 2);
 

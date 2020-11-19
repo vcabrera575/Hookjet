@@ -13,6 +13,7 @@ public class GameController : MonoBehaviour
     public float playerBaseSpeed = 12f;
     public float dashDistance = 5f;
     public float jumpHeight = 5f;
+    public float defaultGravityScale = 1f;
 
     // Hookshot management
     public Vector3 hookshotLocation; // How far the current hook is from the player

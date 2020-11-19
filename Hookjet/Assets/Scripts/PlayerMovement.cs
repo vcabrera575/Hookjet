@@ -30,11 +30,7 @@ public class PlayerMovement : MonoBehaviour
 
     // Time Management
     float dashTimer = 0f;
-
-    Collider2D[] groundColliders;
     public bool grounded;
-    bool jump;
-    bool dash;
     bool dashCooldown;
     bool wasOnHook;
 
@@ -61,15 +57,41 @@ public class PlayerMovement : MonoBehaviour
         else
             inputs = inputs.normalized * ((inputs.magnitude - deadZone) / (1 - deadZone));
 
+        // allow player jumping
         if (grounded && Input.GetButtonDown("Jump"))
         {
             playerController.AddForce(new Vector2(0f, gameController.jumpHeight * acceleration), ForceMode2D.Impulse);
             grounded = false;
         }
-        else
+
+
+        // If player is on a hook, stop moving out of that distance
+        if (gameController.onHook)
         {
-            inputs.y = 0;
+            playerController.gravityScale = gameController.defaultGravityScale / 4;
+            float currentDistance = Vector3.Distance(transform.position, gameController.hookshotLocation);
+            if (currentDistance > gameController.distanceFromHit)
+            {
+                Vector3 distanceFromPoint = transform.position - gameController.hookshotLocation;
+                distanceFromPoint *= gameController.distanceFromHit / currentDistance;
+                transform.position = gameController.hookshotLocation + distanceFromPoint;
+            }
+
+            wasOnHook = true;
         }
+        else if(wasOnHook)
+        {
+            wasOnHook = false;
+
+            // Reset player's falling velocity
+            Vector3 tmpVelocity = playerController.velocity;
+            playerController.velocity = new Vector3(tmpVelocity.x, 0, tmpVelocity.z);
+
+            playerController.gravityScale = gameController.defaultGravityScale;
+        }
+
+        Camera.main.transform.position = new Vector3(transform.position.x + 6, 0, Camera.main.transform.position.z);
+
     }
 
     void FixedUpdate()
