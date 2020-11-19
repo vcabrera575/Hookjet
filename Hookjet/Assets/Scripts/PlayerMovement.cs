@@ -23,6 +23,7 @@ public class PlayerMovement : MonoBehaviour
     public Transform groundCheck;
     public float groundDistance = 0.4f; // The size the sphere should check for
     public LayerMask groundLayer;
+    bool firstGroundContact;
 
     // Pendulum management
     float angularVelocity = 0f;
@@ -38,30 +39,24 @@ public class PlayerMovement : MonoBehaviour
     {
         dashCooldown = false;
         wasOnHook = false;
+        firstGroundContact = false;
         playerController = GetComponent<Rigidbody2D>();
         playerMass = playerController.mass;
     }
 
     void Update()
     {
-        inputs = Vector2.zero;
-        inputs.x = Input.GetAxis("Horizontal");
-        inputs.y = Input.GetAxis("Vertical");
-        float deadZone = 0.025f; // Controller deadzone
-
         grounded = Physics2D.OverlapCircle(groundCheck.position, groundDistance, groundLayer);
 
-        // Fix deadzone for controllers and add normalization
-        if (inputs.magnitude < deadZone)
-            inputs = Vector2.zero;
-        else
-            inputs = inputs.normalized * ((inputs.magnitude - deadZone) / (1 - deadZone));
-
         // allow player jumping
-        if (grounded && Input.GetButtonDown("Jump"))
+        if (grounded)
         {
-            playerController.AddForce(new Vector2(0f, gameController.jumpHeight * acceleration), ForceMode2D.Impulse);
-            grounded = false;
+            firstGroundContact = true;
+            if (Input.GetButtonDown("Jump"))
+            {
+                playerController.AddForce(new Vector2(0f, gameController.jumpHeight * acceleration), ForceMode2D.Impulse);
+                grounded = false;
+            }
         }
 
 
@@ -90,17 +85,41 @@ public class PlayerMovement : MonoBehaviour
             playerController.gravityScale = gameController.defaultGravityScale;
         }
 
+        // Make camera follow player
         Camera.main.transform.position = new Vector3(transform.position.x + 6, 0, Camera.main.transform.position.z);
-
     }
 
     void FixedUpdate()
     {
         float movementSpeed = gameController.playerSpeed * acceleration * Time.fixedDeltaTime;
 
-        Vector3 targetVelocity = new Vector2( inputs.x * movementSpeed, playerController.velocity.y);
-        playerController.velocity = targetVelocity;
+        // TODO: Make this also happen while player is in the air, but make it look like they don't move at the start
+        if (!gameController.onHook)
+        {
+            if (firstGroundContact)
+            {
+                Vector3 targetVelocity = new Vector2(movementSpeed, playerController.velocity.y);
+                playerController.velocity = targetVelocity;
+            }
+        }
     }
+
+    void OnCollisionEnter2D(Collision2D col)
+    {
+        // If we collide with the jump blue area and the player hasn't already jumped, make them jump
+        if (col.gameObject.tag == "JumpTrigger")
+        {
+            // Don't consider this collision to stop the player from movement
+            Physics2D.IgnoreCollision(col.collider, gameObject.GetComponent<Collider2D>());
+
+            if (grounded)
+            {
+                playerController.AddForce(new Vector2(0f, gameController.jumpHeight * acceleration), ForceMode2D.Impulse);
+                grounded = false;
+            }
+        }
+    }
+
 
     void PendulumPlayer(Vector3 move)
     {
@@ -121,4 +140,6 @@ public class PlayerMovement : MonoBehaviour
         angle += angularVelocity * 0.995f;
         angularVelocity += angularAcceleration;
     }
+
+
 }
