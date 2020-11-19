@@ -15,7 +15,7 @@ public class GameController : MonoBehaviour
     public float jumpHeight = 5f;
 
     // Hookshot management
-    public RaycastHit hookshotLocation; // How far the current hook is from the player
+    public Vector3 hookshotLocation; // How far the current hook is from the player
     public float distanceFromHit = 0f;
     public float hookAcceleration = 10f;
     public bool onHook = false;

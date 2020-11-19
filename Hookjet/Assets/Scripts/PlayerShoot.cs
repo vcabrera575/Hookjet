@@ -12,8 +12,8 @@ public class PlayerShoot : MonoBehaviour
     public float movementToHit = 0f;
     float distanceToHit = 0f;
 
+    Vector3 mousePosition;
     GameObject newRope;
-    Vector3 hitLocation;
 
 
     // Update is called once per frame
@@ -26,7 +26,7 @@ public class PlayerShoot : MonoBehaviour
         else if(Input.GetButtonUp("Fire1"))
         {
             // Reset so player can move again
-            gameController.hookshotLocation = new RaycastHit();
+            gameController.hookshotLocation = new Vector3();
             gameController.distanceFromHit = 0f;
             gameController.onHook = false;
 
@@ -34,54 +34,39 @@ public class PlayerShoot : MonoBehaviour
                 Destroy(newRope);
         }
 
-        /*
         if (newRope)
         {
             // Move the rope for the player and move 
-            newRope.transform.position = transform.position - new Vector3(0, 0.75f, 0);
-            newRope.GetComponent<Transform>().LookAt(hitLocation);
+            newRope.transform.position = gameController.hookshotLocation;
+            // Rope turns to the player
+            newRope.transform.LookAt(transform.position);
 
             // Make the rope appear to go point that was hit
-            distanceToHit = Vector3.Distance(transform.parent.position, hitLocation);
-            newRope.transform.localScale = new Vector3(1, 1, distanceToHit / 4);
+            distanceToHit = Vector3.Distance(transform.position, gameController.hookshotLocation);
+            newRope.transform.localScale = new Vector3(1, 1, distanceToHit / 2);
 
             // Shrink the rope if the player somehow got closer to feel smoother
-            float currentDistance = Vector3.Distance(transform.parent.position, gameController.hookshotLocation.point);
+            float currentDistance = Vector3.Distance(transform.position, mousePosition);
             if (currentDistance < gameController.distanceFromHit)
                 gameController.distanceFromHit = currentDistance;
 
         }
-        */
     }
 
     void Shoot()
     {
-        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mousePosition.z = 0;
-
 
         newRope = Instantiate(rope, mousePosition, transform.rotation);
 
         // Rope turns to the player
         newRope.transform.LookAt(transform.position);
 
-        /*
-        if (Physics.Raycast(transform.position, transform.forward, out hit))
-        {
-            if (hit.transform.tag == "Environment")
-            {
-                // This is where we create things when we hit an environment object
-                newRope = Instantiate(rope, transform.position - new Vector3(0, -1, 0), transform.rotation);
-                hitLocation = hit.point;
-
-                // Save info for player movement
-                gameController.hookshotLocation = hit;
-                gameController.distanceFromHit = Vector3.Distance(transform.parent.position, gameController.hookshotLocation.point);
-                gameController.onHook = true;
-            }
-        }
-        */
-
+        // Save info for player movement
+        gameController.hookshotLocation = mousePosition;
+        gameController.distanceFromHit = Vector3.Distance(transform.position, gameController.hookshotLocation);
+        gameController.onHook = true;
     }
 
 }

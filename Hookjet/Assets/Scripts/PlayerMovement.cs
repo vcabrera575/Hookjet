@@ -83,11 +83,11 @@ public class PlayerMovement : MonoBehaviour
     void PendulumPlayer(Vector3 move)
     {
         Vector3 bob = transform.position; // Player is the bob
-        Vector3 origin = gameController.hookshotLocation.point; // The spot where the player hit
+        Vector3 origin = gameController.hookshotLocation; // The spot where the player hit
         float length = gameController.distanceFromHit;
         
         // Which way are we facing
-        Vector3 currentDirection = (transform.position - gameController.hookshotLocation.point).normalized;
+        Vector3 currentDirection = (transform.position - gameController.hookshotLocation).normalized;
         float angle = Vector3.Angle(Vector3.down, currentDirection) * Mathf.Deg2Rad;
 
         bob.x = origin.x + length * Mathf.Sin(angle);
