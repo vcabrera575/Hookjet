@@ -24,7 +24,7 @@ public class GameController : MonoBehaviour
     void Start()
     {
         distanceFromHit = 0f;
-        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.lockState = CursorLockMode.Confined;
     }
 
     // Update is called once per frame

@@ -54,7 +54,6 @@ public class PlayerMovement : MonoBehaviour
         float deadZone = 0.025f; // Controller deadzone
 
         grounded = Physics2D.OverlapCircle(groundCheck.position, groundDistance, groundLayer);
-        Debug.Log(grounded);
 
         // Fix deadzone for controllers and add normalization
         if (inputs.magnitude < deadZone)

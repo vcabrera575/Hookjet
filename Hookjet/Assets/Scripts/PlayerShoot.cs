@@ -34,6 +34,7 @@ public class PlayerShoot : MonoBehaviour
                 Destroy(newRope);
         }
 
+        /*
         if (newRope)
         {
             // Move the rope for the player and move 
@@ -50,11 +51,21 @@ public class PlayerShoot : MonoBehaviour
                 gameController.distanceFromHit = currentDistance;
 
         }
+        */
     }
 
     void Shoot()
     {
-        RaycastHit hit;
+        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mousePosition.z = 0;
+
+
+        newRope = Instantiate(rope, mousePosition, transform.rotation);
+
+        // Rope turns to the player
+        newRope.transform.LookAt(transform.position);
+
+        /*
         if (Physics.Raycast(transform.position, transform.forward, out hit))
         {
             if (hit.transform.tag == "Environment")
@@ -69,6 +80,7 @@ public class PlayerShoot : MonoBehaviour
                 gameController.onHook = true;
             }
         }
+        */
 
     }
 
