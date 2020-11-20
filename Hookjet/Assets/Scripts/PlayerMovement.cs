@@ -26,8 +26,18 @@ public class PlayerMovement : MonoBehaviour
     bool firstGroundContact;
 
     // Pendulum management
-    float angularVelocity = 0f;
-    float angularAcceleration = 0f;
+    Vector3 startingPos;    // Starting position before begining to pendulum
+    Vector3 bob;            // position of pendulum ball
+    Vector3 origin;         // position of arm origin
+    float length;           // Length of arm
+    float angle;            // Pendulum arm angle
+    float aVelocity;        // Angle velocity
+    float aAcceleration;    // Angle acceleration
+    public float dampener = 0.995f; // How much slower should the swing get?
+    bool firstSwing = false;        // First time pendulum has started swinging
+
+    public enum hookshotSide { right, left }; // What side of the hookshot are we?
+    public hookshotSide side = hookshotSide.left; 
 
     // Time Management
     float dashTimer = 0f;
@@ -63,7 +73,22 @@ public class PlayerMovement : MonoBehaviour
         // If player is on a hook, stop moving out of that distance
         if (gameController.onHook)
         {
+            // Which side of the hookshot are we on?
+            if (transform.position.x < gameController.hookshotLocation.x)
+                side = hookshotSide.left;
+            else
+                side = hookshotSide.right;
+
+
+            if (!wasOnHook) // Is now on hook, but was not before
+            {
+                startingPos = transform.position;
+                CalculateAngle();
+            }
+
             playerController.gravityScale = gameController.defaultGravityScale / 4;
+
+            /*
             float currentDistance = Vector3.Distance(transform.position, gameController.hookshotLocation);
             if (currentDistance > gameController.distanceFromHit)
             {
@@ -71,10 +96,11 @@ public class PlayerMovement : MonoBehaviour
                 distanceFromPoint *= gameController.distanceFromHit / currentDistance;
                 transform.position = gameController.hookshotLocation + distanceFromPoint;
             }
+            */
 
             wasOnHook = true;
         }
-        else if(wasOnHook)
+        else if(wasOnHook) // is NOT on hook but WAS on hook last frame
         {
             wasOnHook = false;
 
@@ -83,10 +109,38 @@ public class PlayerMovement : MonoBehaviour
             playerController.velocity = new Vector3(tmpVelocity.x, 0, tmpVelocity.z);
 
             playerController.gravityScale = gameController.defaultGravityScale;
+
+            // Reset values relating to the angle
+            ResetAngle();
         }
 
+
+        int cameraOffset = 6;
         // Make camera follow player
-        Camera.main.transform.position = new Vector3(transform.position.x + 6, 0, Camera.main.transform.position.z);
+        if (gameController.onHook && (playerController.transform.position.x > gameController.hookshotLocation.x))
+            Camera.main.transform.position = new Vector3(gameController.hookshotLocation.x + cameraOffset, 0, Camera.main.transform.position.z);
+        else
+            Camera.main.transform.position = new Vector3(transform.position.x + cameraOffset, 0, Camera.main.transform.position.z);
+    }
+
+    void CalculateAngle()
+    {
+		// OLD EQUATION
+        //angle = Mathf.Deg2Rad * Vector3.Angle(Vector3.up, (gameController.hookshotLocation - transform.position) );
+
+        Vector3 vectorFromHookshot = gameController.hookshotLocation - transform.position;
+        float x = vectorFromHookshot.x;
+        float y = vectorFromHookshot.y;
+		
+        angle = Mathf.Atan2(y, x);
+
+    }
+    void ResetAngle()
+    {
+        angle = 0f;
+        aAcceleration = 1f;
+        aVelocity = 0f;
+        firstSwing = true;
     }
 
     void FixedUpdate()
@@ -101,6 +155,14 @@ public class PlayerMovement : MonoBehaviour
                 Vector3 targetVelocity = new Vector2(movementSpeed, playerController.velocity.y);
                 playerController.velocity = targetVelocity;
             }
+        }
+        else // If the player IS on a hook
+        {
+            Vector3 targetVelocity = new Vector2(0, playerController.velocity.y);
+            playerController.velocity = Vector3.zero;
+
+            // Calculate where the player will be next
+            transform.position = PendulumPlayer();
         }
     }
 
@@ -121,24 +183,28 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
-    void PendulumPlayer(Vector3 move)
+    Vector3 PendulumPlayer()
     {
-        Vector3 bob = transform.position; // Player is the bob
-        Vector3 origin = gameController.hookshotLocation; // The spot where the player hit
+        Vector2 bob = transform.position; // Player is the bob
+        Vector2 origin = gameController.hookshotLocation; // The spot where the player clicked
         float length = gameController.distanceFromHit;
-        
-        // Which way are we facing
-        Vector3 currentDirection = (transform.position - gameController.hookshotLocation).normalized;
-        float angle = Vector3.Angle(Vector3.down, currentDirection) * Mathf.Deg2Rad;
-
-        bob.x = origin.x + length * Mathf.Sin(angle);
-        bob.z = origin.z + length * Mathf.Cos(angle);
-
-        angularAcceleration = (gravity * playerMass) * Mathf.Sin(angle);
 
 
-        angle += angularVelocity * 0.995f;
-        angularVelocity += angularAcceleration;
+        //Debug.Log("Starting pos: " + startingPos + "\tNewPos: " + bob + "\tAngle: " + angle + "\tlength: " + length);
+
+        bob.x = origin.x + (length * Mathf.Sin(angle));
+        bob.y = origin.y + (-length * Mathf.Cos(angle));
+
+        if (firstSwing)
+            bob.x = -bob.x;
+
+        aAcceleration = (gravity) * Mathf.Sin(angle);
+        angle += aVelocity * dampener * Time.deltaTime * Time.deltaTime;
+        aVelocity += aAcceleration * dampener;
+
+        //Debug.Log("Actallly the where we moved: " + bob);
+        firstSwing = false;
+        return bob;
     }
 
 
