@@ -56,6 +56,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        Vector3 tmpPos = transform.position;
         grounded = Physics2D.OverlapCircle(groundCheck.position, groundDistance, groundLayer);
 
         // allow player jumping
@@ -68,7 +69,6 @@ public class PlayerMovement : MonoBehaviour
                 grounded = false;
             }
         }
-
 
         // If player is on a hook, stop moving out of that distance
         if (gameController.onHook)
@@ -87,17 +87,6 @@ public class PlayerMovement : MonoBehaviour
             }
 
             playerController.gravityScale = gameController.defaultGravityScale / 4;
-
-            /*
-            float currentDistance = Vector3.Distance(transform.position, gameController.hookshotLocation);
-            if (currentDistance > gameController.distanceFromHit)
-            {
-                Vector3 distanceFromPoint = transform.position - gameController.hookshotLocation;
-                distanceFromPoint *= gameController.distanceFromHit / currentDistance;
-                transform.position = gameController.hookshotLocation + distanceFromPoint;
-            }
-            */
-
             wasOnHook = true;
         }
         else if(wasOnHook) // is NOT on hook but WAS on hook last frame
@@ -107,7 +96,6 @@ public class PlayerMovement : MonoBehaviour
             // Reset player's falling velocity
             Vector3 tmpVelocity = playerController.velocity;
             playerController.velocity = new Vector3(tmpVelocity.x, 0, tmpVelocity.z);
-
             playerController.gravityScale = gameController.defaultGravityScale;
 
             // Reset values relating to the angle
@@ -115,12 +103,18 @@ public class PlayerMovement : MonoBehaviour
         }
 
 
+        // Make camera follow player smoothly
         int cameraOffset = 6;
-        // Make camera follow player
+        Vector3 newCameraPos;
         if (gameController.onHook && (playerController.transform.position.x > gameController.hookshotLocation.x))
-            Camera.main.transform.position = new Vector3(gameController.hookshotLocation.x + cameraOffset, 0, Camera.main.transform.position.z);
+            newCameraPos = new Vector3(gameController.hookshotLocation.x + cameraOffset, 0, Camera.main.transform.position.z);
         else
-            Camera.main.transform.position = new Vector3(transform.position.x + cameraOffset, 0, Camera.main.transform.position.z);
+            newCameraPos = new Vector3(transform.position.x + cameraOffset, 0, Camera.main.transform.position.z);
+
+        tmpPos.x = tmpPos.x + cameraOffset;
+        tmpPos.z = Camera.main.transform.position.z;
+        tmpPos.y = 0;
+        Camera.main.transform.position = Vector3.Slerp(tmpPos, newCameraPos, 2f * Time.deltaTime);
     }
 
     void CalculateAngle()
@@ -196,7 +190,7 @@ public class PlayerMovement : MonoBehaviour
         bob.y = origin.y + (-length * Mathf.Cos(angle));
 
         if (firstSwing)
-            bob.x = -bob.x;
+            bob.x = bob.x;
 
         aAcceleration = (gravity) * Mathf.Sin(angle);
         angle += aVelocity * dampener * Time.deltaTime * Time.deltaTime;
