@@ -431,7 +431,7 @@ GameObject:
   - component: {fileID: 292109856}
   m_Layer: 8
   m_Name: GroundCheck
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -876,7 +876,7 @@ GameObject:
   - component: {fileID: 1397394912}
   m_Layer: 8
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -939,6 +939,8 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 567
+  dampener: 0.995
+  side: 1
   grounded: 0
 --- !u!114 &1397394912
 MonoBehaviour:
@@ -952,7 +954,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e737ba44194485041838415847738e06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rope: {fileID: 2965710286882702177, guid: 0178b6876ecabe443bd712c4bc44a820, type: 3}
+  rope: {fileID: 7191405704134645976, guid: 631bcff8b8920e3498ced605bf7f6cc0, type: 3}
   gameController: {fileID: 722175654}
   speed: 20
   movementToHit: 0
@@ -995,7 +997,7 @@ GameObject:
   - component: {fileID: 1591190048}
   m_Layer: 8
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1167,3 +1169,82 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1681944954}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &7191405704563341278
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 7191405704134645970, guid: 631bcff8b8920e3498ced605bf7f6cc0,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191405704134645970, guid: 631bcff8b8920e3498ced605bf7f6cc0,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.99
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191405704134645970, guid: 631bcff8b8920e3498ced605bf7f6cc0,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191405704134645970, guid: 631bcff8b8920e3498ced605bf7f6cc0,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191405704134645970, guid: 631bcff8b8920e3498ced605bf7f6cc0,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191405704134645970, guid: 631bcff8b8920e3498ced605bf7f6cc0,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191405704134645970, guid: 631bcff8b8920e3498ced605bf7f6cc0,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191405704134645970, guid: 631bcff8b8920e3498ced605bf7f6cc0,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191405704134645970, guid: 631bcff8b8920e3498ced605bf7f6cc0,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191405704134645970, guid: 631bcff8b8920e3498ced605bf7f6cc0,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191405704134645970, guid: 631bcff8b8920e3498ced605bf7f6cc0,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191405704134645976, guid: 631bcff8b8920e3498ced605bf7f6cc0,
+        type: 3}
+      propertyPath: m_Name
+      value: Rope
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191405704134645977, guid: 631bcff8b8920e3498ced605bf7f6cc0,
+        type: 3}
+      propertyPath: m_UseMotor
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191405704134645977, guid: 631bcff8b8920e3498ced605bf7f6cc0,
+        type: 3}
+      propertyPath: m_Motor.m_MotorSpeed
+      value: -400
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 631bcff8b8920e3498ced605bf7f6cc0, type: 3}

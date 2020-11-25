@@ -86,7 +86,7 @@ public class PlayerMovement : MonoBehaviour
                 CalculateAngle();
             }
 
-            playerController.gravityScale = gameController.defaultGravityScale / 4;
+            //playerController.gravityScale = gameController.defaultGravityScale / 4;
             wasOnHook = true;
         }
         else if(wasOnHook) // is NOT on hook but WAS on hook last frame
@@ -96,7 +96,7 @@ public class PlayerMovement : MonoBehaviour
             // Reset player's falling velocity
             Vector3 tmpVelocity = playerController.velocity;
             playerController.velocity = new Vector3(tmpVelocity.x, 0, tmpVelocity.z);
-            playerController.gravityScale = gameController.defaultGravityScale;
+            //playerController.gravityScale = gameController.defaultGravityScale;
 
             // Reset values relating to the angle
             ResetAngle();
@@ -153,10 +153,11 @@ public class PlayerMovement : MonoBehaviour
         else // If the player IS on a hook
         {
             Vector3 targetVelocity = new Vector2(0, playerController.velocity.y);
+            targetVelocity = new Vector2(movementSpeed, playerController.velocity.y);
             playerController.velocity = Vector3.zero;
 
             // Calculate where the player will be next
-            transform.position = PendulumPlayer();
+            //transform.position = PendulumPlayer();
         }
     }
 
