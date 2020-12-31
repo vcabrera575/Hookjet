@@ -141,6 +141,7 @@ public class PlayerMovement : MonoBehaviour
     {
         float movementSpeed = gameController.playerSpeed * acceleration * Time.fixedDeltaTime;
 
+
         // TODO: Make this also happen while player is in the air, but make it look like they don't move at the start
         if (!gameController.onHook)
         {

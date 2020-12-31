@@ -7,11 +7,6 @@ public class PlayerShoot : MonoBehaviour
     public GameObject rope;
     public GameController gameController;
 
-    //float distance = 2f;
-    public float speed = 20f;
-    public float movementToHit = 0f;
-    float distanceToHit = 0f;
-
     Vector3 mousePosition;
     GameObject newRope;
 
@@ -23,47 +18,44 @@ public class PlayerShoot : MonoBehaviour
         {
             Shoot();
         }
-        else if(Input.GetButtonUp("Fire1"))
+        else if (Input.GetButtonUp("Fire1"))
         {
-            // Reset so player can move again
-            gameController.hookshotLocation = new Vector3();
-            gameController.distanceFromHit = 0f;
+            // Reset so that the player can continue moving
             gameController.onHook = false;
+            gameController.distanceFromHit = 0f;
+            gameController.hookshotLocation = new Vector3();
 
+            // Destroy the current rope object
             if (newRope)
                 Destroy(newRope);
         }
 
         if (newRope)
         {
-            // Move the rope for the player and move 
-            newRope.transform.position = gameController.hookshotLocation;
-            // Rope turns to the player
+            // Turn the rope to the player
             newRope.transform.LookAt(transform.position);
 
-            // Make the rope stretch towards the player
-            distanceToHit = Vector3.Distance(transform.position, gameController.hookshotLocation);
-            newRope.transform.localScale = new Vector3(1, 1, distanceToHit / 2);
+            // Make the rope stretch to the player
+            float currentDistance = Vector3.Distance(transform.position, gameController.hookshotLocation);
+            newRope.transform.localScale = new Vector3(1, 1, currentDistance / 2);
 
-            // Shrink the rope if the player somehow got closer to feel smoother
-            float currentDistance = Vector3.Distance(transform.position, mousePosition);
+            // Shrink the rope if the player got closer to the hookshot location
             if (currentDistance < gameController.distanceFromHit)
                 gameController.distanceFromHit = currentDistance;
-
         }
     }
 
     void Shoot()
     {
+        // Get where the mouse is at and then create our object there
         mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mousePosition.z = 0;
-
         newRope = Instantiate(rope, mousePosition, transform.rotation);
 
-        // Rope turns to the player
+        // Turn rope to the player
         newRope.transform.LookAt(transform.position);
 
-        // Save info for player movement
+        // Save the information for player movement
         gameController.hookshotLocation = mousePosition;
         gameController.distanceFromHit = Vector3.Distance(transform.position, gameController.hookshotLocation);
         gameController.onHook = true;
