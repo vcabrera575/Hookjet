@@ -153,9 +153,9 @@ public class PlayerMovement : MonoBehaviour
         }
         else // If the player IS on a hook
         {
-            Vector3 targetVelocity = new Vector2(0, playerController.velocity.y);
-            targetVelocity = new Vector2(movementSpeed, playerController.velocity.y);
-            playerController.velocity = Vector3.zero;
+            // Attach the player to the end of the rope
+            Transform ropeDirection = gameController.ropeObject.transform;
+            transform.position = ropeDirection.position + (ropeDirection.forward * gameController.distanceFromHit);
 
             // Calculate where the player will be next
             //transform.position = PendulumPlayer();

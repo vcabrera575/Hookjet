@@ -20,6 +20,8 @@ public class GameController : MonoBehaviour
     public float distanceFromHit = 0f;
     public float hookAcceleration = 10f;
     public bool onHook = false;
+    public GameObject ropeObject;
+
 
     // Start is called before the first frame update
     void Start()

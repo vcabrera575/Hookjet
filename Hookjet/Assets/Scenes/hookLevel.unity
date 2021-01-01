@@ -308,7 +308,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &258973276
 GameObject:
@@ -418,7 +418,7 @@ Transform:
   - {fileID: 583967304}
   - {fileID: 116913925}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &292109855
 GameObject:
@@ -568,6 +568,7 @@ MonoBehaviour:
   distanceFromHit: 0
   hookAcceleration: 10
   onHook: 0
+  ropeObject: {fileID: 0}
 --- !u!4 &722175655
 Transform:
   m_ObjectHideFlags: 0
@@ -661,7 +662,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &975422503
 GameObject:
@@ -753,7 +754,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1248742759
 GameObject:
@@ -916,7 +917,7 @@ Transform:
   - {fileID: 1591190046}
   - {fileID: 292109856}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1397394911
 MonoBehaviour:
@@ -956,8 +957,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rope: {fileID: 3372404098763330680, guid: 62dd6d159072fa14cb1ae975c7e928ee, type: 3}
   gameController: {fileID: 722175654}
-  speed: 20
-  movementToHit: 0
 --- !u!61 &1397394913
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1169,7 +1168,7 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1681944954}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1001 &3372404097526109962
+--- !u!1001 &2064603459
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -1179,17 +1178,27 @@ PrefabInstance:
     - target: {fileID: 3372404098763330680, guid: 62dd6d159072fa14cb1ae975c7e928ee,
         type: 3}
       propertyPath: m_Name
-      value: RopeObject
+      value: Rope
+      objectReference: {fileID: 0}
+    - target: {fileID: 3372404098763330681, guid: 62dd6d159072fa14cb1ae975c7e928ee,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: 7.4754734
+      objectReference: {fileID: 0}
+    - target: {fileID: 3372404098763330681, guid: 62dd6d159072fa14cb1ae975c7e928ee,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.y
+      value: 0.52509224
       objectReference: {fileID: 0}
     - target: {fileID: 3372404098763330687, guid: 62dd6d159072fa14cb1ae975c7e928ee,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 7.4754734
       objectReference: {fileID: 0}
     - target: {fileID: 3372404098763330687, guid: 62dd6d159072fa14cb1ae975c7e928ee,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.97
+      value: 0.52509224
       objectReference: {fileID: 0}
     - target: {fileID: 3372404098763330687, guid: 62dd6d159072fa14cb1ae975c7e928ee,
         type: 3}
@@ -1219,7 +1228,7 @@ PrefabInstance:
     - target: {fileID: 3372404098763330687, guid: 62dd6d159072fa14cb1ae975c7e928ee,
         type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3372404098763330687, guid: 62dd6d159072fa14cb1ae975c7e928ee,
         type: 3}

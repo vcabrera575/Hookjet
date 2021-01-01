@@ -27,13 +27,16 @@ public class PlayerShoot : MonoBehaviour
 
             // Destroy the current rope object
             if (newRope)
+            {
                 Destroy(newRope);
+                gameController.ropeObject = new GameObject();
+            }
         }
 
         if (newRope)
         {
             // Turn the rope to the player
-            newRope.transform.LookAt(transform.position);
+            //newRope.transform.LookAt(transform.position);
 
             // Make the rope stretch to the player
             float currentDistance = Vector3.Distance(transform.position, gameController.hookshotLocation);
@@ -59,6 +62,8 @@ public class PlayerShoot : MonoBehaviour
         gameController.hookshotLocation = mousePosition;
         gameController.distanceFromHit = Vector3.Distance(transform.position, gameController.hookshotLocation);
         gameController.onHook = true;
+
+        gameController.ropeObject = newRope;
     }
 
 }
