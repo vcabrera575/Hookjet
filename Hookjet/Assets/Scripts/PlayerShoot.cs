@@ -29,7 +29,7 @@ public class PlayerShoot : MonoBehaviour
             if (newRope)
             {
                 Destroy(newRope);
-                gameController.ropeObject = new GameObject();
+
             }
         }
 
@@ -43,8 +43,10 @@ public class PlayerShoot : MonoBehaviour
             newRope.transform.localScale = new Vector3(1, 1, currentDistance / 2);
 
             // Shrink the rope if the player got closer to the hookshot location
+            /*
             if (currentDistance < gameController.distanceFromHit)
                 gameController.distanceFromHit = currentDistance;
+            */
         }
     }
 
