@@ -44,9 +44,12 @@ Thumbs.db
 # Fonts
 ##
 *.ttf
-*.ttf.meta 
 
 ##
 # Textures
 ## 
 [Aa]ssets/Textures*
+Hookjet/Logs/*
+Hookjet/UserSettings/EditorUserSettings.asset
+Hookjet/.idea/*
+
